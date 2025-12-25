@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="src/VolcanionTracking.Client/VolcanionTracking.Client.csproj" />
+  <Project Path="src\VolcanionTracking.Api\VolcanionTracking.Api.csproj" />
+</Solution>
