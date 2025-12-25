@@ -1,13 +1,8 @@
 -- ============================================================
 -- Apply Recommended Indexes
 -- Run this after initial migration
+-- Note: CONCURRENTLY cannot be used inside transaction blocks
 -- ============================================================
-
--- Enable timing
-\timing
-
--- Start transaction
-BEGIN;
 
 -- ============================================================
 -- 1. TRACKING EVENTS INDEXES
@@ -97,8 +92,6 @@ CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_partner_api_keys_partner_active
 ON partner_api_keys(partner_id) 
 WHERE status = 'Active' AND (expired_at IS NULL OR expired_at > NOW());
 
-COMMIT;
-
 -- ============================================================
 -- 5. ANALYZE TABLES
 -- ============================================================
@@ -123,5 +116,3 @@ ORDER BY tablename, indexname;
 
 -- Check index usage after some queries
 -- SELECT * FROM v_index_usage;
-
-\echo 'Indexes created successfully!'
