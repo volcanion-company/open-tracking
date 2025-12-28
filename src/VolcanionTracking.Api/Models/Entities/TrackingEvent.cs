@@ -1,6 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+using VolcanionTracking.Api.Models.Enums;
 
 namespace VolcanionTracking.Api.Models.Entities;
 
@@ -22,17 +23,28 @@ public class TrackingEvent
     [Column("sub_system_id")]
     public Guid SubSystemId { get; set; }
     
+    [Column("user_id")]
+    public string? UserId { get; set; }
+    
+    [Column("trace_id")]
+    public string? TraceId { get; set; }
+
+    [Column("session_id")]
+    public string? SessionId { get; set; }
+
+    [Column("client_type")]
+    public ClientType ClientType { get; set; }
+
     [Required]
     [Column("event_time")]
     public DateTime EventTime { get; set; }
     
     [Required]
-    [MaxLength(100)]
     [Column("event_type")]
-    public string EventType { get; set; } = string.Empty;
+    public EventType EventType { get; set; }
     
     [Column("metadata", TypeName = "jsonb")]
-    public string Metadata { get; set; } = "{}"; // JSON stored as JSONB in PostgreSQL
+    public string Metadata { get; set; } = "{}";
     
     [MaxLength(50)]
     [Column("ip")]
@@ -41,7 +53,7 @@ public class TrackingEvent
     [MaxLength(500)]
     [Column("user_agent")]
     public string UserAgent { get; set; } = string.Empty;
-    
+
     // Navigation
     [ForeignKey(nameof(PartnerId))]
     public Partner? Partner { get; set; }

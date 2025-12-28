@@ -1,6 +1,28 @@
 -- Insert tracking events for VOL_HASH from January 1, 2025 to December 30, 2025
 -- Approximately 11234-15154 events per day (random)
 
+-- First, ensure partner and subsystem exist
+INSERT INTO partners (id, code, name, status, created_at)
+VALUES (
+    '73d40a04-f705-4e00-bf2e-ed6ece4d4488',
+    'VOLCANION',
+    'Volcanion Company',
+    'Active',
+    NOW()
+)
+ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO sub_systems (id, partner_id, code, name, status, created_at)
+VALUES (
+    '9901f003-072c-41ad-a0c4-f6aa606ef40f',
+    '73d40a04-f705-4e00-bf2e-ed6ece4d4488',
+    'VOL_HASH',
+    'Volcanion Hash System',
+    'Active',
+    NOW()
+)
+ON CONFLICT (id) DO NOTHING;
+
 DO $$
 DECLARE
     vol_partner_id UUID := '73d40a04-f705-4e00-bf2e-ed6ece4d4488';

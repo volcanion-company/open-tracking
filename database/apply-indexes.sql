@@ -20,10 +20,10 @@ ON tracking_events(partner_id, event_type, event_time DESC);
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_tracking_events_subsystem_type 
 ON tracking_events(sub_system_id, event_type, event_time DESC);
 
--- Recent events partial index (hot data)
+-- Recent events index (optimized for time-based queries)
+-- Note: Removed WHERE clause as NOW() is not IMMUTABLE
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_tracking_events_recent 
-ON tracking_events(partner_id, event_time DESC)
-WHERE event_time > NOW() - INTERVAL '30 days';
+ON tracking_events(partner_id, event_time DESC);
 
 -- IP-based analytics
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_tracking_events_ip 
@@ -88,9 +88,10 @@ ON partner_api_keys(status, expired_at)
 WHERE status = 'Active';
 
 -- Partner's active keys
+-- Note: Removed NOW() check as it's not IMMUTABLE; filter expired_at at query time
 CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_partner_api_keys_partner_active 
-ON partner_api_keys(partner_id) 
-WHERE status = 'Active' AND (expired_at IS NULL OR expired_at > NOW());
+ON partner_api_keys(partner_id, expired_at) 
+WHERE status = 'Active';
 
 -- ============================================================
 -- 5. ANALYZE TABLES
